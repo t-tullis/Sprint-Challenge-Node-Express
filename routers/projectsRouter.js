@@ -42,7 +42,7 @@ router.put('/:id', (req, res) => {
     const { id } = req.params;
     const { name, description, completed } = req.body;
 
-    db.update(id, { name, description, completed }).then(project => {
+    db.update(id, { name, description, completed}).then(project => {
         if(project === 0){
             res.status(404).json({ errorMessage: "The project with that ID does not exist"})
         }
@@ -55,6 +55,7 @@ router.put('/:id', (req, res) => {
     })
 })
 
+//Delete a project
 router.delete('/:id', (req, res) => {
     const { id } = req.params
 
@@ -67,5 +68,20 @@ router.delete('/:id', (req, res) => {
         res.status(500).json({ error: "There was an error removing that project from the database"})
     })
 })
+
+//Get all project actions
+router.get('/actions/:id', (req, res) => {
+    const { id }= req.params
+    db.getProjectActions(id).then(actions => {
+        if(actions === 0){
+            res.status(404).json({ errorMessage: 'There are no actions for this project'})
+        }
+        res.status(200).json({actions})
+    }).catch(error => {
+        res.status(500).json({ error: 'Error getting project actions'})
+    })
+})
+
+
 
 module.exports = router;
